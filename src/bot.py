@@ -29,4 +29,17 @@ async def quote_cmd(interaction: discord.Interaction, user: discord.User, quote:
     await quotes_channel.send(f'"{quote}"\n-{user.mention}')
     await interaction.response.send_message('Success (probably)!')
 
+@tree.context_menu(
+    name='Quote Message'
+)
+async def quote_message(interaction: discord.Interaction, message: discord.Message):
+    user = message.author
+    quote = message.content
+    quotes_channel: discord.TextChannel = discord.utils.get(
+        interaction.guild.channels, name='quotes'
+    )
+    await quotes_channel.send(f'"{quote}"\n{user.mention}')
+    await interaction.response.send_message('Success (probably)!')
+
+
 client.run(TOKEN)
