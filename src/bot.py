@@ -11,9 +11,13 @@ tree = discord.app_commands.CommandTree(client)
 async def do_quote_message(
     channel: discord.TextChannel,
     quote: str,
-    user: discord.User
+    user: discord.User,
+    quoter: discord.User,
+    from_message: bool
 ):
-    message = f'> {quote}\n-{user.mention}'
+    message = f'> {quote}\n'
+    message += f'-{user.mention}\n\n'
+    message += f'*quoted by: {quoter.mention}*'
     await channel.send(
         content=message,
         allowed_mentions=discord.AllowedMentions(everyone=False)
@@ -36,10 +40,11 @@ async def quote_cmd(interaction: discord.Interaction, user: discord.User, quote:
     quotes_channel: discord.TextChannel = discord.utils.get(
         interaction.guild.channels, name='quotes'
     )
+    quoter = interaction.user
     if quotes_channel is None:
         await interaction.response.send_message('Error: No quotes channel in guild!')
     else:
-        await do_quote_message(quotes_channel, quote, user)
+        await do_quote_message(quotes_channel, quote, user, quoter, True)
         await interaction.response.send_message('Success!', ephemeral=True)
 
 @tree.context_menu(
@@ -51,10 +56,11 @@ async def quote_message(interaction: discord.Interaction, message: discord.Messa
     quotes_channel: discord.TextChannel = discord.utils.get(
         interaction.guild.channels, name='quotes'
     )
+    quoter = interaction.user
     if quotes_channel is None:
         await interaction.response.send_message('Error: No quotes channel in guild!')
     else:
-        await do_quote_message(quotes_channel, quote, user)
+        await do_quote_message(quotes_channel, quote, user, quoter, False)
         await interaction.response.send_message('Success!', ephemeral=True)
 
 
