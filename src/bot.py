@@ -45,7 +45,7 @@ async def quote_cmd(interaction: discord.Interaction, user: discord.User, quote:
     )
     quoter = interaction.user
     if quotes_channel is None:
-        await interaction.response.send_message('Error: No quotes channel in guild!')
+        await interaction.response.send_message('Error: No quotes channel in guild!', ephemeral=True)
     else:
         await do_quote_message(quotes_channel, quote, user, quoter)
         await interaction.response.send_message('Success!', ephemeral=True)
@@ -62,7 +62,7 @@ async def quote_message(interaction: discord.Interaction, message: discord.Messa
     quoter = interaction.user
     jump_url = message.jump_url
     if quotes_channel is None:
-        await interaction.response.send_message('Error: No quotes channel in guild!')
+        await interaction.response.send_message('Error: No quotes channel in guild!', ephemeral=True)
     else:
         await do_quote_message(quotes_channel, quote, user, quoter, jump_url)
         await interaction.response.send_message('Success!', ephemeral=True)
