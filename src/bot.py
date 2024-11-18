@@ -8,6 +8,16 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 tree = discord.app_commands.CommandTree(client)
 
+async def do_quote_message(
+    channel: discord.TextChannel,
+    quote: str,
+    user: discord.User
+):
+    message = f'> {quote}\n-{user.mention}'
+    await channel.send(
+        content=message,
+        allowed_mentions=discord.AllowedMentions(everyone=False)
+    )
 
 @client.event
 async def on_ready():
@@ -26,8 +36,11 @@ async def quote_cmd(interaction: discord.Interaction, user: discord.User, quote:
     quotes_channel: discord.TextChannel = discord.utils.get(
         interaction.guild.channels, name='quotes'
     )
-    await quotes_channel.send(f'"{quote}"\n-{user.mention}')
-    await interaction.response.send_message('Success (probably)!')
+    if quotes_channel is None:
+        await interaction.response.send_message('Error: No quotes channel in guild!')
+    else:
+        await do_quote_message(quotes_channel, quote, user)
+        await interaction.response.send_message('Success!', ephemeral=True)
 
 @tree.context_menu(
     name='Quote Message'
@@ -38,8 +51,11 @@ async def quote_message(interaction: discord.Interaction, message: discord.Messa
     quotes_channel: discord.TextChannel = discord.utils.get(
         interaction.guild.channels, name='quotes'
     )
-    await quotes_channel.send(f'"{quote}"\n{user.mention}')
-    await interaction.response.send_message('Success (probably)!')
+    if quotes_channel is None:
+        await interaction.response.send_message('Error: No quotes channel in guild!')
+    else:
+        await do_quote_message(quotes_channel, quote, user)
+        await interaction.response.send_message('Success!', ephemeral=True)
 
 
 client.run(TOKEN)
