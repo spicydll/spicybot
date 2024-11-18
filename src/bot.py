@@ -16,8 +16,8 @@ async def do_quote_message(
     from_message: bool
 ):
     message = f'> {quote}\n'
-    message += f'-{user.mention}\n\n'
-    message += f'*quoted by: {quoter.mention}*'
+    message += f'-{user.mention} '
+    message += f'*(quoted by: {quoter.mention})*'
     await channel.send(
         content=message,
         allowed_mentions=discord.AllowedMentions(everyone=False)
