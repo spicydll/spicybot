@@ -13,11 +13,14 @@ async def do_quote_message(
     quote: str,
     user: discord.User,
     quoter: discord.User,
-    from_message: bool
+    jump_url: str = None
 ):
     message = f'> {quote}\n'
     message += f'-{user.mention} '
     message += f'*(quoted by: {quoter.mention})*'
+    if jump_url is not None:
+        message += f'\n{jump_url}'
+
     await channel.send(
         content=message,
         allowed_mentions=discord.AllowedMentions(everyone=False)
@@ -44,7 +47,7 @@ async def quote_cmd(interaction: discord.Interaction, user: discord.User, quote:
     if quotes_channel is None:
         await interaction.response.send_message('Error: No quotes channel in guild!')
     else:
-        await do_quote_message(quotes_channel, quote, user, quoter, True)
+        await do_quote_message(quotes_channel, quote, user, quoter)
         await interaction.response.send_message('Success!', ephemeral=True)
 
 @tree.context_menu(
@@ -57,10 +60,11 @@ async def quote_message(interaction: discord.Interaction, message: discord.Messa
         interaction.guild.channels, name='quotes'
     )
     quoter = interaction.user
+    jump_url = message.jump_url
     if quotes_channel is None:
         await interaction.response.send_message('Error: No quotes channel in guild!')
     else:
-        await do_quote_message(quotes_channel, quote, user, quoter, False)
+        await do_quote_message(quotes_channel, quote, user, quoter, jump_url)
         await interaction.response.send_message('Success!', ephemeral=True)
 
 
