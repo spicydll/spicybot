@@ -47,8 +47,14 @@ async def quote_cmd(interaction: discord.Interaction, user: discord.User, quote:
     if quotes_channel is None:
         await interaction.response.send_message('Error: No quotes channel in guild!', ephemeral=True)
     else:
-        await do_quote_message(quotes_channel, quote, user, quoter)
-        await interaction.response.send_message('Success!', ephemeral=True)
+        try:
+            await do_quote_message(quotes_channel, quote, user, quoter)
+            await interaction.response.send_message('Success!', ephemeral=True)
+        except discord.errors.Forbidden:
+            await interaction.response.send_message(
+                f'Error: Bot does not have permission to send messages in {quotes_channel.mention}',
+                ephemeral=True
+            )
 
 @tree.context_menu(
     name='Quote Message'
@@ -64,8 +70,14 @@ async def quote_message(interaction: discord.Interaction, message: discord.Messa
     if quotes_channel is None:
         await interaction.response.send_message('Error: No quotes channel in guild!', ephemeral=True)
     else:
-        await do_quote_message(quotes_channel, quote, user, quoter, jump_url)
-        await interaction.response.send_message('Success!', ephemeral=True)
+        try:
+            await do_quote_message(quotes_channel, quote, user, quoter, jump_url)
+            await interaction.response.send_message('Success!', ephemeral=True)
+        except discord.errors.Forbidden:
+            await interaction.response.send_message(
+                f'Error: Bot does not have permission to send messages in {quotes_channel.mention}',
+                ephemeral=True
+            )
 
 
 client.run(TOKEN)
