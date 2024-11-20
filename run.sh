@@ -9,9 +9,9 @@ fi
 if [[ "$1" -eq "prod" ]]
 then
     echo "Production Mode"
-    docker --env-file=secrets.env -d --restart always spicybot
+    docker run --env-file=secrets.env -d --restart always --name=spicybot spicybot
 else
     echo "Development Mode"
-    docker --env-file=secrets.env spicybot
+    docker run --env-file=secrets.env --name=spicybot spicybot
 fi
 
