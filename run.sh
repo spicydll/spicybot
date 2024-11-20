@@ -6,7 +6,7 @@ then
     exit -1
 fi
 
-if [[ "$1" -eq "prod" ]]
+if [[ "$1" == "prod" ]]
 then
     echo "Production Mode"
     docker run --env-file=secrets.env -d --restart always --name=spicybot spicybot
